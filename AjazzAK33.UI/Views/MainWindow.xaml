@@ -1,0 +1,138 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AjazzAK33.UI;assembly=AjazzAK33.UI"
+        mc:Ignorable="d"
+        x:Class="AjazzAK33.UI.MainWindow"
+        Title="AjazzAK33.UI"
+        MinWidth="700" Width="700"
+        MinHeight="300" Height="300">
+  
+  <Window.Resources>
+    <local:DictConverter x:Key="dictConverter"/>
+    <local:ColorConverter x:Key="clrConverter"/>
+    <local:EnumKeyNameConverter x:Key="keyConverter"/>
+  </Window.Resources>
+  
+  <Window.Styles>
+    <Style Selector="Grid Button.key">
+      <Setter Property="Margin" Value="2"/>
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="BorderBrush" Value="Black"/>
+      <Setter Property="BorderThickness" Value="1"/>
+      <Setter Property="Command" Value="{Binding Click}"/>
+      <Setter Property="CommandParameter" Value="{Binding $self.Name}"/>
+      <Setter Property="Content" Value="{Binding $self.Name, RelativeSource={RelativeSource Self}, Converter={StaticResource keyConverter}}"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Background">
+        <Setter.Value>
+          <MultiBinding Converter="{StaticResource dictConverter}">
+            <Binding Path="Colors"/>
+            <Binding RelativeSource="{RelativeSource Self}" Path="Name"/>
+          </MultiBinding>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </Window.Styles>
+
+  <Grid RowDefinitions="0.9*, 0.1*">
+    <Grid RowDefinitions="*,*,*,*,*,*" MinWidth="700" MinHeight="250" Grid.Row="0">
+      <Grid Grid.Row="0" ColumnDefinitions="60*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,60*">
+        <Button Grid.Column="0" Classes="key" x:Name="Esc"/>
+        <Button Grid.Column="1" Classes="key" x:Name="F1"/>
+        <Button Grid.Column="2" Classes="key" x:Name="F2"/>
+        <Button Grid.Column="3" Classes="key" x:Name="F3"/>
+        <Button Grid.Column="4" Classes="key" x:Name="F4"/>
+        <Button Grid.Column="5" Classes="key" x:Name="F5"/>
+        <Button Grid.Column="6" Classes="key" x:Name="F6"/>
+        <Button Grid.Column="7" Classes="key" x:Name="F7"/>
+        <Button Grid.Column="8" Classes="key" x:Name="F8"/>
+        <Button Grid.Column="9" Classes="key" x:Name="F9"/>
+        <Button Grid.Column="10" Classes="key" x:Name="F10"/>
+        <Button Grid.Column="11" Classes="key" x:Name="F11"/>
+        <Button Grid.Column="12" Classes="key" x:Name="F12"/>
+        <Button Grid.Column="13" Classes="key" x:Name="Fn"/>
+        <Button Grid.Column="14" Classes="key" x:Name="Del"/>
+      </Grid>  
+      <Grid Grid.Row="1" ColumnDefinitions="40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,80*,40*">
+        <Button Grid.Column="0" Classes="key" x:Name="Tilde"/>
+        <Button Grid.Column="1" Classes="key" x:Name="N1"/>
+        <Button Grid.Column="2" Classes="key" x:Name="N2"/>
+        <Button Grid.Column="3" Classes="key" x:Name="N3"/>
+        <Button Grid.Column="4" Classes="key" x:Name="N4"/>
+        <Button Grid.Column="5" Classes="key" x:Name="N5"/>
+        <Button Grid.Column="6" Classes="key" x:Name="N6"/>
+        <Button Grid.Column="7" Classes="key" x:Name="N7"/>
+        <Button Grid.Column="8" Classes="key" x:Name="N8"/>
+        <Button Grid.Column="9" Classes="key" x:Name="N9"/>
+        <Button Grid.Column="10" Classes="key" x:Name="N0"/>
+        <Button Grid.Column="11" Classes="key" x:Name="Minus"/>
+        <Button Grid.Column="12" Classes="key" x:Name="Equals"/>
+        <Button Grid.Column="13" Classes="key" x:Name="Backspace"/>
+        <Button Grid.Column="14" Classes="key" x:Name="Home" />
+      </Grid>
+      <Grid Grid.Row="2" ColumnDefinitions="60*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,60*,40">
+        <Button Grid.Column="0" Classes="key" x:Name="Tab"/>
+        <Button Grid.Column="1" Classes="key" x:Name="Q"/>
+        <Button Grid.Column="2" Classes="key" x:Name="W"/>
+        <Button Grid.Column="3" Classes="key" x:Name="E"/>
+        <Button Grid.Column="4" Classes="key" x:Name="R"/>
+        <Button Grid.Column="5" Classes="key" x:Name="T"/>
+        <Button Grid.Column="6" Classes="key" x:Name="Y"/>
+        <Button Grid.Column="7" Classes="key" x:Name="U"/>
+        <Button Grid.Column="8" Classes="key" x:Name="I"/>
+        <Button Grid.Column="9" Classes="key" x:Name="O"/>
+        <Button Grid.Column="10" Classes="key" x:Name="P"/>
+        <Button Grid.Column="11" Classes="key" x:Name="OpenBracket"/>
+        <Button Grid.Column="12" Classes="key" x:Name="CloseBracket"/>
+        <Button Grid.Column="13" Classes="key" x:Name="Backslash"/>
+        <Button Grid.Column="14" Classes="key" x:Name="PgUp"/>
+      </Grid>
+      <Grid Grid.Row="3" ColumnDefinitions="74*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,90*,40*">
+        <Button Grid.Column="0" Classes="key" x:Name="CapsLock"/>
+        <Button Grid.Column="1" Classes="key" x:Name="A"/>
+        <Button Grid.Column="2" Classes="key" x:Name="S"/>
+        <Button Grid.Column="3" Classes="key" x:Name="D"/>
+        <Button Grid.Column="4" Classes="key" x:Name="F"/>
+        <Button Grid.Column="5" Classes="key" x:Name="G"/>
+        <Button Grid.Column="6" Classes="key" x:Name="H"/>
+        <Button Grid.Column="7" Classes="key" x:Name="J"/>
+        <Button Grid.Column="8" Classes="key" x:Name="K"/>
+        <Button Grid.Column="9" Classes="key" x:Name="L"/>
+        <Button Grid.Column="10" Classes="key" x:Name="Semicolon"/>
+        <Button Grid.Column="11" Classes="key" x:Name="Apostrophe"/>
+        <Button Grid.Column="12" Classes="key" x:Name="Enter"/>
+        <Button Grid.Column="13" Classes="key" x:Name="PgDn"/>
+      </Grid>
+      <Grid Grid.Row="4" ColumnDefinitions="90*,40*,40*,40*,40*,40*,40*,40*,40*,40*,40*,51*,51*,51*">
+        <Button Grid.Column="0" Classes="key" x:Name="LShift"/>
+        <Button Grid.Column="1" Classes="key" x:Name="Z"/>
+        <Button Grid.Column="2" Classes="key" x:Name="X"/>
+        <Button Grid.Column="3" Classes="key" x:Name="C"/>
+        <Button Grid.Column="4" Classes="key" x:Name="V"/>
+        <Button Grid.Column="5" Classes="key" x:Name="B"/>
+        <Button Grid.Column="6" Classes="key" x:Name="N"/>
+        <Button Grid.Column="7" Classes="key" x:Name="M"/>
+        <Button Grid.Column="8" Classes="key" x:Name="Comma"/>
+        <Button Grid.Column="9" Classes="key" x:Name="Period"/>
+        <Button Grid.Column="10" Classes="key" x:Name="Slash"/>
+        <Button Grid.Column="11" Classes="key" x:Name="RShift"/>
+        <Button Grid.Column="12" Classes="key" x:Name="UArrow"/>
+        <Button Grid.Column="13" Classes="key" x:Name="End"/>
+      </Grid>
+      <Grid Grid.Row="5" ColumnDefinitions="51*,51*,51*,250*,51*,40*,51*,51*,51*">
+        <Button Grid.Column="0" Classes="key" x:Name="LCtrl"/>
+        <Button Grid.Column="1" Classes="key" x:Name="Super"/>
+        <Button Grid.Column="2" Classes="key" x:Name="LAlt"/>
+        <Button Grid.Column="3" Classes="key" x:Name="Space"/>
+        <Button Grid.Column="4" Classes="key" x:Name="RAlt"/>
+        <Button Grid.Column="5" Classes="key" x:Name="RCtrl"/>
+        <Button Grid.Column="6" Classes="key" x:Name="LArrow"/>
+        <Button Grid.Column="7" Classes="key" x:Name="DArrow"/>
+        <Button Grid.Column="8" Classes="key" x:Name="RArrow"/>
+      </Grid>
+  </Grid>
+    <Button Grid.Row="1" Content="Apply" Command="{Binding Apply}"/>
+  </Grid>
+</Window>
