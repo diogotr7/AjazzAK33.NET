@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace AjazzAK33.UI
+namespace AjazzAK33.UI.Converters
 {
     public class FontColorConverter : IMultiValueConverter
     {

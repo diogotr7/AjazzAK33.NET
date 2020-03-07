@@ -12,16 +12,35 @@ namespace AjazzAK33.UI
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly Ajazz keyboard;
+        private Ajazz keyboard;
+
         public AvaloniaDictionary<Key, Color> KeyColors { get; set; }
+
+        private bool keyboardConnected;
+        public bool KeyboardConnected 
+        { 
+            get => keyboardConnected; 
+            set  
+            { 
+                keyboardConnected = value;
+                OnPropertyChanged();
+            }
+        }
 
         public MainWindowViewModel()
         {
             if (!Ajazz.TryGetKeyboard(out keyboard))
-                throw new Exception("Keyboard not found");//TODO
+            {
+                KeyboardConnected = false;
+                //throw new Exception("Keyboard not found");//TODO
+            }
+            else
+            {
+                KeyboardConnected = true;
+            }
             //colors = kb.getcolors; maybe?
             KeyColors = new AvaloniaDictionary<Key, Color>();
-            KeyColors.CollectionChanged += (a,b) => OnPropertyChanged(nameof(KeyColors));
+            KeyColors.CollectionChanged += (a, b) => OnPropertyChanged(nameof(KeyColors));
             Color c = Colors.Blue;
             foreach (var k in (Key[])Enum.GetValues(typeof(Key)))
             {
@@ -68,9 +87,22 @@ namespace AjazzAK33.UI
             SetAllKeys(await GetColorFromDialog("Fill"));
         }
 
+        public void Refresh()
+        {
+            if (!Ajazz.TryGetKeyboard(out keyboard))
+            {
+                KeyboardConnected = false;
+                //throw new Exception("Keyboard not found");//TODO
+            }
+            else
+            {
+                KeyboardConnected = true;
+            }
+        }
+
         private void SetAllKeys(Color clr)
         {
-            foreach(var k in (Key[])Enum.GetValues(typeof(Key)))
+            foreach (var k in (Key[])Enum.GetValues(typeof(Key)))
             {
                 KeyColors[k] = clr;
             }

@@ -3,7 +3,7 @@ using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 
-namespace AjazzAK33.UI
+namespace AjazzAK33.UI.Converters
 {
     public class EnumKeyNameConverter : IValueConverter
     {
