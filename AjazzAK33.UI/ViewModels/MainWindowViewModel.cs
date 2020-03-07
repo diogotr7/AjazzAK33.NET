@@ -10,30 +10,26 @@ using System.Text;
 using AjazzAK33;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
+using Avalonia.Collections;
 
 namespace AjazzAK33.UI
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private Dictionary<Key, Color> colors;
-
-        public Dictionary<Key, Color> Colors
-        {
-            get => colors;
-            set
-            {
-                colors = value;
-                OnPropertyChanged();
-            }
-        }
+        private Ajazz keyboard;
+        public AvaloniaDictionary<Key, Color> KeyColors { get; set; }
 
         public MainWindowViewModel()
         {
-            Color c = Color.FromRgb(0, 0, 255);
-            Colors = new Dictionary<Key, Color>();
+            keyboard = Ajazz.GetKeyboard();
+            //colors = kb.getcolors; maybe?
+            KeyColors = new AvaloniaDictionary<Key, Color>();
+            KeyColors.CollectionChanged += (a,b) => OnPropertyChanged(nameof(KeyColors));
+            Color c = Colors.Red;
             foreach (var k in (Key[])Enum.GetValues(typeof(Key)))
             {
-                Colors.Add(k, c);
+                KeyColors.Add(k, c);
                 c = ColorUtils.ChangeHue(c.ToDrawingClr(), 1).ToAvaloniaClr();
             }
         }
@@ -47,32 +43,44 @@ namespace AjazzAK33.UI
             {
                 DataContext = new ColorPickerViewModel()
                 {
-                    Color = Colors[r]
+                    Color = KeyColors[r]
                 },
                 Title = name
             };
             await cp.ShowDialog<string>((Avalonia.Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
-            Colors[r] = (cp.DataContext as ColorPickerViewModel).Color;
-            OnPropertyChanged(nameof(Colors));
+            KeyColors[r] = (cp.DataContext as ColorPickerViewModel).Color;
+            //OnPropertyChanged(nameof(KeyColors));
         }
 
         public async void Apply()
         {
-            var kb = Ajazz.GetKeyboard();
-            if (Colors.All(o => o.Value.ToString() == Colors[0].ToString()))
-                kb.SetColor(Colors[0].ToDrawingClr());
+            if (KeyColors.All(o => o.Value.ToUint32() == KeyColors[0].ToUint32()))
+                keyboard.SetColor(KeyColors[0].ToDrawingClr());
             else
             {
                 var kbColors = new List<Tuple<Key, System.Drawing.Color>>();
-                foreach (var k in Colors)
+                foreach (var k in KeyColors)
                 {
                     kbColors.Add(new Tuple<Key, System.Drawing.Color>(k.Key, k.Value.ToDrawingClr()));
                 }
-                await Task.Run(() => kb.SetKey(kbColors));
+                await Task.Run(() => keyboard.SetKey(kbColors));
             }
         }
 
         public async void Fill()
+        {
+            SetAllKeys(await GetColorFromDialog("Fill"));
+        }
+
+        private void SetAllKeys(Color clr)
+        {
+            foreach(var k in (Key[])Enum.GetValues(typeof(Key)))
+            {
+                KeyColors[k] = clr;
+            }
+        }
+
+        private async Task<Color> GetColorFromDialog(string title)
         {
             ColorPicker cp = new ColorPicker()
             {
@@ -80,20 +88,10 @@ namespace AjazzAK33.UI
                 {
                     Color = Color.FromRgb(255, 0, 0)
                 },
-                Title = "Fill"
+                Title = title
             };
             await cp.ShowDialog((Avalonia.Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
-            var color = (cp.DataContext as ColorPickerViewModel).Color;
-            SetAllKeys(color);
-        }
-
-        private void SetAllKeys(Color clr)
-        {
-            foreach(var k in (Key[])Enum.GetValues(typeof(Key)))
-            {
-                Colors[k] = clr;
-            }
-            OnPropertyChanged(nameof(Colors));
+            return (cp.DataContext as ColorPickerViewModel).Color;
         }
 
         #region inpc

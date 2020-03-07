@@ -74,5 +74,13 @@ namespace AjazzAK33.UI
 
         public static Avalonia.Media.Color ToAvaloniaClr(this System.Drawing.Color clr)
             => Avalonia.Media.Color.FromArgb(clr.A, clr.R, clr.G, clr.B);
+
+        public static Avalonia.Media.Color GetFontColorFromBackground(this Avalonia.Media.Color c)
+        {
+            if ((c.R * 0.299 + c.G * 0.587 + c.B * 0.114) > 186)
+                return Avalonia.Media.Colors.Black;
+            else
+                return Avalonia.Media.Colors.White;
+        }
     }
 }

@@ -93,9 +93,6 @@ namespace AjazzAK33
 
         private void WriteRead(byte[] packet)
         {
-            int sum = packet.Skip(2).Select(b => (int)b).Sum();
-            packet[1] = (byte)(sum & 0x00ff);
-            packet[2] = (byte)((sum & 0x00ff) >> 8);
             stream.Write(packet);
             stream.Read();
         }
