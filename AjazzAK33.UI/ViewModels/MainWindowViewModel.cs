@@ -92,7 +92,6 @@ namespace AjazzAK33.UI
             if (!Ajazz.TryGetKeyboard(out keyboard))
             {
                 KeyboardConnected = false;
-                //throw new Exception("Keyboard not found");//TODO
             }
             else
             {

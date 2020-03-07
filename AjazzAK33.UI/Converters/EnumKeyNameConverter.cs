@@ -9,8 +9,15 @@ namespace AjazzAK33.UI.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (!(value is string))
+            {
+                throw new ArgumentException("Value must be a string");
+            }
+
             if (Enum.TryParse<Key>(value as string, out var r))
+            {
                 return EnumUtils.GetEnumDescription(r);
+            }
 
             return Avalonia.AvaloniaProperty.UnsetValue;
         }
@@ -19,7 +26,5 @@ namespace AjazzAK33.UI.Converters
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
