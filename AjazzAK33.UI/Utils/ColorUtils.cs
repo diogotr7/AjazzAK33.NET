@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using Avalonia.Media;
+using System;
 
 namespace AjazzAK33.UI
 {
@@ -45,12 +43,12 @@ namespace AjazzAK33.UI
 
             switch (hi)
             {
-                case 0: return Color.FromArgb(v, t, p);
-                case 1: return Color.FromArgb(q, v, p);
-                case 2: return Color.FromArgb(p, v, t);
-                case 3: return Color.FromArgb(p, q, v);
-                case 4: return Color.FromArgb(t, p, v);
-                default: return Color.FromArgb(v, p, q);
+                case 0: return Color.FromRgb(v, t, p);
+                case 1: return Color.FromRgb(q, v, p);
+                case 2: return Color.FromRgb(p, v, t);
+                case 3: return Color.FromRgb(p, q, v);
+                case 4: return Color.FromRgb(t, p, v);
+                default: return Color.FromRgb(v, p, q);
             }
         }
 
@@ -69,18 +67,15 @@ namespace AjazzAK33.UI
             return FromHsv(hue, saturation, value);
         }
 
-        public static System.Drawing.Color ToDrawingClr(this Avalonia.Media.Color clr)
+        public static System.Drawing.Color ToDrawingClr(this Color clr)
             => System.Drawing.Color.FromArgb(clr.A, clr.R, clr.G, clr.B);
 
-        public static Avalonia.Media.Color ToAvaloniaClr(this System.Drawing.Color clr)
-            => Avalonia.Media.Color.FromArgb(clr.A, clr.R, clr.G, clr.B);
-
-        public static Avalonia.Media.Color GetFontColorFromBackground(this Avalonia.Media.Color c)
+        public static Color GetFontColorFromBackground(this Color c)
         {
             if ((c.R * 0.299 + c.G * 0.587 + c.B * 0.114) > 186)
-                return Avalonia.Media.Colors.Black;
+                return Colors.Black;
             else
-                return Avalonia.Media.Colors.White;
+                return Colors.White;
         }
     }
 }

@@ -10,6 +10,9 @@ namespace AjazzAK33.UI
     {
         public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (values.Count != 2)
+                throw new ArgumentException("There must be 2 values passed in");
+
             if (!(values[0] is IDictionary<Key, Color>))
                 return Avalonia.AvaloniaProperty.UnsetValue;
 

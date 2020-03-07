@@ -1,36 +1,32 @@
-﻿using Avalonia.Controls.ApplicationLifetimes;
+﻿using Avalonia.Collections;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using AjazzAK33;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
-using Avalonia.Collections;
 
 namespace AjazzAK33.UI
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private Ajazz keyboard;
+        private readonly Ajazz keyboard;
         public AvaloniaDictionary<Key, Color> KeyColors { get; set; }
 
         public MainWindowViewModel()
         {
-            keyboard = Ajazz.GetKeyboard();
+            if (!Ajazz.TryGetKeyboard(out keyboard))
+                throw new Exception("Keyboard not found");//TODO
             //colors = kb.getcolors; maybe?
             KeyColors = new AvaloniaDictionary<Key, Color>();
             KeyColors.CollectionChanged += (a,b) => OnPropertyChanged(nameof(KeyColors));
-            Color c = Colors.Red;
+            Color c = Colors.Blue;
             foreach (var k in (Key[])Enum.GetValues(typeof(Key)))
             {
                 KeyColors.Add(k, c);
-                c = ColorUtils.ChangeHue(c.ToDrawingClr(), 1).ToAvaloniaClr();
+                c = ColorUtils.ChangeHue(c, 1);
             }
         }
 

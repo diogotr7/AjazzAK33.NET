@@ -1,9 +1,8 @@
-﻿using System;
+﻿using HidSharp;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using HidSharp;
 using System.Drawing;
+using System.Linq;
 
 namespace AjazzAK33
 {
@@ -12,14 +11,24 @@ namespace AjazzAK33
         private readonly HidDevice device;
         private readonly HidStream stream;
 
-        public static Ajazz GetKeyboard()
+        public static bool TryGetKeyboard(out Ajazz keyboard)
         {
             var devs = DeviceList.Local.GetHidDevices().Where(d => d.VendorID == 0x0c45);
+            if (!devs.Any())
+            {
+                keyboard = null;
+                return false;
+            }
 
-            var device = devs.First(d => d.GetMaxOutputReportLength() == 64);
+            var device = devs.FirstOrDefault(d => d.GetMaxOutputReportLength() == 64);
+            if(device == null)
+            {
+                keyboard = null;
+                return false;
+            }
 
-            var watch = new System.Diagnostics.Stopwatch();
-            return new Ajazz(device);
+            keyboard = new Ajazz(device);
+            return true;
         }
 
         private Ajazz(HidDevice dev)
@@ -27,7 +36,9 @@ namespace AjazzAK33
             device = dev;
 
             if (!device.TryOpen(out stream))
+            {
                 throw new Exception();
+            }
 
             stream.ReadTimeout = 4000;
             stream.WriteTimeout = 4000;
@@ -75,7 +86,9 @@ namespace AjazzAK33
             foreach(var key in keys)
             {
                 if (!KeyMap.TryGetValue(key.Item1, out var coords))
+                {
                     continue;
+                }
 
                 Packets.KeyPacket[5 + 0] = coords.x;
                 Packets.KeyPacket[5 + 1] = coords.y;
@@ -97,7 +110,7 @@ namespace AjazzAK33
             stream.Read();
         }
 
-        public Dictionary<Key, (byte x, byte y)> KeyMap = new Dictionary<Key, (byte, byte)>()
+        private readonly Dictionary<Key, (byte x, byte y)> KeyMap = new Dictionary<Key, (byte, byte)>()
         {            
             [Key.Esc] = (0x00, 0x00),
             [Key.F1] = (0x03, 0x00),
