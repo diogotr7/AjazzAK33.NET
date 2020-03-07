@@ -9,8 +9,8 @@ namespace AjazzAK33
 {
     public class Ajazz
     {
-        private HidDevice device;
-        private HidStream stream;
+        private readonly HidDevice device;
+        private readonly HidStream stream;
 
         public static Ajazz GetKeyboard()
         {
