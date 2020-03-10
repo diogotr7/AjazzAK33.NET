@@ -12,73 +12,57 @@ namespace AjazzAK33.UI
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
+        #region Fields
         private Ajazz keyboard;
+        private static readonly Key[] AllKeys = (Key[])Enum.GetValues(typeof(Key));
+        #endregion
 
+        #region Properties
         public AvaloniaDictionary<Key, Color> KeyColors { get; set; }
 
         private bool keyboardConnected;
-        public bool KeyboardConnected 
-        { 
-            get => keyboardConnected; 
-            set  
-            { 
+
+        public bool KeyboardConnected
+        {
+            get => keyboardConnected;
+            set
+            {
                 keyboardConnected = value;
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         public MainWindowViewModel()
         {
-            if (!Ajazz.TryGetKeyboard(out keyboard))
-            {
-                KeyboardConnected = false;
-                //throw new Exception("Keyboard not found");//TODO
-            }
-            else
-            {
-                KeyboardConnected = true;
-            }
+            CheckForKeyboard();
             //colors = kb.getcolors; maybe?
             KeyColors = new AvaloniaDictionary<Key, Color>();
             KeyColors.CollectionChanged += (a, b) => OnPropertyChanged(nameof(KeyColors));
-            Color c = Colors.Blue;
-            foreach (var k in (Key[])Enum.GetValues(typeof(Key)))
-            {
-                KeyColors.Add(k, c);
-                c = ColorUtils.ChangeHue(c, 1);
-            }
+
+            FillKeyColors();
         }
 
+        #region Commands
         public async void Click(string name)
         {
             if (!Enum.TryParse<Key>(name, out var r))
                 return;
 
-            ColorPicker cp = new ColorPicker()
-            {
-                DataContext = new ColorPickerViewModel()
-                {
-                    Color = KeyColors[r]
-                },
-                Title = name
-            };
-            await cp.ShowDialog<string>((Avalonia.Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
-            KeyColors[r] = (cp.DataContext as ColorPickerViewModel).Color;
-            //OnPropertyChanged(nameof(KeyColors));
+            KeyColors[r] = await GetColorFromDialog(name);
         }
 
         public async void Apply()
         {
+            //if all colors are equal
             if (KeyColors.All(o => o.Value.ToUint32() == KeyColors[0].ToUint32()))
+            {
                 keyboard.SetColor(KeyColors[0].ToDrawingClr());
+            }
             else
             {
-                var kbColors = new List<Tuple<Key, System.Drawing.Color>>();
-                foreach (var k in KeyColors)
-                {
-                    kbColors.Add(new Tuple<Key, System.Drawing.Color>(k.Key, k.Value.ToDrawingClr()));
-                }
-                await Task.Run(() => keyboard.SetKey(kbColors));
+                var newColors = KeyColors.Select(kc => new Tuple<Key, System.Drawing.Color>(kc.Key, kc.Value.ToDrawingClr()));
+                await Task.Run(() => keyboard.SetKey(newColors));
             }
         }
 
@@ -87,21 +71,27 @@ namespace AjazzAK33.UI
             SetAllKeys(await GetColorFromDialog("Fill"));
         }
 
-        public void Refresh()
+        public void CheckForKeyboard()
         {
-            if (!Ajazz.TryGetKeyboard(out keyboard))
+            KeyboardConnected = Ajazz.TryGetKeyboard(out keyboard);
+        }
+        #endregion
+
+        #region Methods
+        private void FillKeyColors()
+        {
+            //should probably get colors from the keyboard here
+            Color c = Colors.Blue;
+            foreach (var k in AllKeys)
             {
-                KeyboardConnected = false;
-            }
-            else
-            {
-                KeyboardConnected = true;
+                KeyColors.Add(k, c);
+                c = ColorUtils.ChangeHue(c, 2);
             }
         }
 
         private void SetAllKeys(Color clr)
         {
-            foreach (var k in (Key[])Enum.GetValues(typeof(Key)))
+            foreach (var k in AllKeys)
             {
                 KeyColors[k] = clr;
             }
@@ -118,8 +108,9 @@ namespace AjazzAK33.UI
                 Title = title
             };
             await cp.ShowDialog((Avalonia.Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).MainWindow);
-            return (cp.DataContext as ColorPickerViewModel).Color;
+            return (cp.DataContext as ColorPickerViewModel)?.Color ?? default;
         }
+        #endregion
 
         #region inpc
         public event PropertyChangedEventHandler PropertyChanged;

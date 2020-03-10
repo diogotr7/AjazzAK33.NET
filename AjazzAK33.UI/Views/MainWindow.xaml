@@ -56,7 +56,7 @@
       IsVisible="{Binding Path=KeyboardConnected, Converter={StaticResource inverseBooleanConverter}}" 
       Grid.Row="1"
       Content="Refresh"
-      Command="{Binding Refresh}"
+      Command="{Binding CheckForKeyboard}"
       VerticalAlignment="Center"
       HorizontalAlignment="Center"
     />
