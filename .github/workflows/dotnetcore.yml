@@ -29,8 +29,8 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.100' # SDK Version to use.
-    - run: dotnet build AjazzAK33.UI\AjazzAK33.UI.csproj --configuration Release --runtime linux-x64
+    - run: dotnet build AjazzAK33.UI/AjazzAK33.UI.csproj --configuration Release --runtime linux-x64
     - uses: actions/upload-artifact@v1
       with:
         name: AjazzAK33.UI-linux64
-        path: AjazzAK33.UI\bin\Release\netcoreapp3.0\linux-x64
+        path: AjazzAK33.UI/bin/Release/netcoreapp3.0/linux-x64
