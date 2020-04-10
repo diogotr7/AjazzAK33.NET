@@ -85,7 +85,7 @@ namespace AjazzAK33.UI
             foreach (var k in AllKeys)
             {
                 KeyColors.Add(k, c);
-                c = ColorUtils.ChangeHue(c, 2);
+                c = ColorUtils.ChangeHue(c, 1.2);
             }
         }
 
